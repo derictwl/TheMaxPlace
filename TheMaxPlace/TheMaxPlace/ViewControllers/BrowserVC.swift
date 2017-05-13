@@ -41,7 +41,7 @@ class BrowserVC: UIViewController,UIWebViewDelegate {
         }
         else{
             webVW.stopLoading()
-            if webVW.request?.url?.absoluteString == "" {
+            if webVW.request?.url?.absoluteString == "" || webVW.request?.url == nil {
                 self.loadRequestInWebview()
             }else{
                 webVW.reload()
@@ -92,17 +92,10 @@ class BrowserVC: UIViewController,UIWebViewDelegate {
     }
     func checkIfSessionExist()
     {
-        let status = Reach().connectionStatus()
         
-        switch status
-        {
-        case .unknown, .offline:
+        if Reach().connectionStatus().description == "Unknown" || Reach().connectionStatus().description == "Offline"{
             self.showALertMessages()
             return
-        case .online(.wwan):
-            print("Connected via WWAN")
-        case .online(.wiFi):
-            print("Connected via WiFi")
         }
         let requestURL: NSURL = NSURL(string: "http://themaxplace.com/api/g_id.php")!
         let urlRequest: NSMutableURLRequest = NSMutableURLRequest(url: requestURL as URL)
